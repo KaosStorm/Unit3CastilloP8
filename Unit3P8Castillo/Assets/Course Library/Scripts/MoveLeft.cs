@@ -18,7 +18,9 @@ public class MoveLeft : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       if (playerControllerScript.gameOver == false)
+        if (playerControllerScript.startGame == true)
+        {
+            if (playerControllerScript.gameOver == false)
         {
             transform.Translate(Vector3.left * Time.deltaTime * speed);
         }
@@ -26,6 +28,23 @@ public class MoveLeft : MonoBehaviour
        if (transform.position.x < leftBound && gameObject.CompareTag("Obstacle"))
         {
             Destroy(gameObject);
+        }
+        }
+        else if (playerControllerScript.startGame == false)
+        {
+            transform.Translate(Vector3.left * Time.deltaTime * 6);
+        }
+        // Move the object to the left while the game is not over
+        if (playerControllerScript.gameOver == false)
+        {
+            if (playerControllerScript.isDashing == true)
+            {
+                transform.Translate(Vector3.left * speed * Time.deltaTime * playerControllerScript.dash);
+            }
+            else
+            {
+                transform.Translate(Vector3.left * speed * Time.deltaTime);
+            }
         }
     }
 }

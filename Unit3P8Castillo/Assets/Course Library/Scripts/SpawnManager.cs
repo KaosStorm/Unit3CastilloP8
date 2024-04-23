@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
-    public GameObject obstaclePrefab;
+    public GameObject[] obstaclePrefab;
     private Vector3 spawnPos = new Vector3 (25, 0, 0);
     private float startDelay = 2;
     private float repeatDelay = 2;
@@ -23,8 +23,9 @@ public class SpawnManager : MonoBehaviour
     {
         if (playerControllerScript.gameOver == false) 
         {
-            GameObject randomObstacle = obstaclePrefabs[Random.Range(0, obstaclePrefabs.Count)];
-            Instantiate(randomObstacle, spawnPos, Quaternion.identity);
+            int randomObsticalIndex = Random.Range(0, obstaclePrefab.Length);
+            Vector3 SpawnManager = spawnPos;
+            Instantiate(obstaclePrefabs[randomObsticalIndex], spawnPos, obstaclePrefabs[randomObsticalIndex].transform.rotation);
         }
         
     }

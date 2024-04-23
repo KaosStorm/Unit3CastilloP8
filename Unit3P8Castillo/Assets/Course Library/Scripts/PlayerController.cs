@@ -16,6 +16,12 @@ public class PlayerController : MonoBehaviour
     public AudioClip crashSound;
     public AudioSource playerAudio;
     public bool canDoubleJump;
+    public float dash = 2;
+    public bool isDashing = false;
+    private float animSpeed;
+    public bool startGame = false;
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -24,6 +30,24 @@ public class PlayerController : MonoBehaviour
         playerAnim = GetComponent<Animator>();
         Physics.gravity *= gravityModifier;
         playerAudio = GetComponent<AudioSource>();
+
+        _ = StartCoroutine(WalkThenRun());
+        IEnumerator WalkThenRun()
+        {
+            WalkIn();
+            yield return new WaitForSeconds(1.5f);
+            Run();
+        }
+
+        void WalkIn()
+        {
+            playerAnim.SetFloat("Speed_f", 0.4f);
+        }
+        void Run()
+        {
+            playerAnim.SetFloat("Speed_f", 1f);
+            startGame = true;
+        }
     }
 
     // Update is called once per frame
@@ -50,6 +74,18 @@ public class PlayerController : MonoBehaviour
             playerAudio.PlayOneShot(jumpSound, 1);
 
         }
+
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            animSpeed = playerAnim.GetFloat("Speed_f") * dash;
+            playerAnim.SetFloat("Speed_f", animSpeed);
+            isDashing = true;
+        }
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            playerAnim.SetFloat("Speed_f", animSpeed / dash);
+            isDashing = false;
+        }
     }   
         private void OnCollisionEnter(Collision collision)
     {
@@ -57,6 +93,7 @@ public class PlayerController : MonoBehaviour
         {
             isOnGround = true;
             dirtParticle.Play();
+
         }
         else if (collision.gameObject.CompareTag("Obstacle"))
         {
